@@ -1,4 +1,4 @@
-//遍历入栈，需要层级
+
 
 function decodeString(s: string): string {
     const targetString = `1[${s}]`;

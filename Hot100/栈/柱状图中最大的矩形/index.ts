@@ -47,4 +47,43 @@ function largestRectangleArea(heights: number[]): number {
 
 };
 
-// 2.0 使用单调栈
+// 2.0 使用单调栈  
+function largestRectangleArea2(heights: number[]): number {
+    const n = heights.length
+    const toEndList = dailyTemperatures(heights).map((val, idx) => {
+        if (val === -1) {
+            return n - (idx + 1)
+        }
+        return val
+    })
+    const toFrontList = dailyTemperatures([...heights].reverse()).reverse().map((val, idx) => {
+        if (val === -1) {
+            return idx 
+        }
+        return val
+    })
+    let maxResult = 0
+    for (let i = 0; i < n; i++) {
+        maxResult = Math.max(maxResult, (toEndList[i] + toFrontList[i] +1) * heights[i], heights[i])
+    }
+    return Math.max(maxResult)
+};
+//借用每日温度的函数 ， 
+function dailyTemperatures(temperatures: number[]): number[] {
+    const result = new Array(temperatures.length).fill(-1)
+    const stack: number[] = [0];
+    for (let i = 1; i < temperatures.length; i++) {
+        let topData = temperatures[stack[stack.length - 1]]
+        if (temperatures[i] >= topData) {
+            stack.push(i)
+            continue;
+        }
+        while (stack.length > 0 && temperatures[stack[stack.length - 1]] > temperatures[i]) {
+            const index = stack.pop()
+            result[index] = i - index -1 
+        }
+        stack.push(i)
+    }
+
+    return result;
+};
